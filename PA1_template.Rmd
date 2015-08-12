@@ -34,6 +34,23 @@ print(paste("Median of total steps per day:", median(total_steps_per_day$steps))
 
 ## What is the average daily activity pattern?
 
+To find out, we calculate the mean number of steps per five minutes interval.
+
+Then we show the corresponding time series plot and mark the interval with the highest average number of steps accross all days.
+
+```{r}
+five_minutes_interval_steps_mean <- aggregate(steps ~ interval, data = data, FUN = mean)
+# Make the plot
+plot(x = five_minutes_interval_steps_mean$interval, y = five_minutes_interval_steps_mean$steps, type = "l", main = "Daily activity pattern", xlab = "Five minutes interval step", ylab = "Mean number of steps")
+# Mark the 5 minutes interval whis has the highest average steps per day with a red dotted line
+abline(v = five_minutes_interval_steps_mean$interval[which.max(five_minutes_interval_steps_mean$steps)], col="red", lty=2)
+```
+
+The 5-minute interval, on average accross all days in the dataset, containing the maximum number of steps is: (Also see: Red dotted line in plot)
+
+```{r}
+five_minutes_interval_steps_mean$interval[which.max(five_minutes_interval_steps_mean$steps)]
+```
 
 
 ## Imputing missing values
