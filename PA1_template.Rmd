@@ -103,3 +103,28 @@ What we can see is a change in the frequency of the distribution in the histogra
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+```{r}
+# Add a dayofweek column to the data frame
+data.filled$dayofweek <- weekdays(as.POSIXct(data.filled$date))
+# Add a weekend column to the data frame
+data.filled$weekend[grepl("Saturday|Sunday", data.filled$dayofweek)] <- "Weekend"
+data.filled$weekend[!grepl("Saturday|Sunday", data.filled$dayofweek)] <- "Weekday"
+
+# convert weekend to factor
+type_of_day <- as.factor(data.filled$weekend)
+
+# aggregate steps to get average number of steps in interval(s) across weekdays/weekends
+data.activity <- aggregate(steps ~ interval+type_of_day, data.filled, mean)
+
+# We will use ggplot2
+library(ggplot2)
+
+p <- qplot(interval, steps, data=data.activity, geom=c("line"), xlab="Interval", 
+      ylab="Mean number of steps", main="Differences in activity pattern") + facet_wrap(~ type_of_day, ncol=1)
+
+print(p)
+```
+
+As we can see the persons weekends activity is generally more distributed throughout the day, while at weekdays the person shows higher activity in the first quarter of the day.
+
